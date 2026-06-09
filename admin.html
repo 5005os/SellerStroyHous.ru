@@ -2,282 +2,288 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>StroyHous Admin Pro</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StroyHous Admin</title>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey:"AlzaSyCu7Y2vlMAdL-dOgJgPOg3psGU4GbNYY9o",
+    authDomain:"stroimarket-d1bdd.firebaseapp.com",
+    projectId:"stroimarket-d1bdd"
+  });
+  const db=firebase.firestore();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-    :root { --bg: #f3f4f6; --sidebar: #ffffff; --accent: #2563eb; --text: #1f2937; --border: #e5e7eb; }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; display: flex; height: 100vh; overflow: hidden; }
-
-    /* Экран входа */
-    #login-screen { position: fixed; inset: 0; background: #111827; z-index: 1000; display: flex; align-items: center; justify-content: center; flex-direction: column; color: white; }
-    .login-box { background: #1f2937; padding: 40px; border-radius: 12px; text-align: center; width: 320px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    .login-input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 6px; border: none; background: #374151; color: white; font-size: 16px; outline: none; }
-    .login-btn { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.2s; }
-    .login-btn:hover { background: #1d4ed8; }
-
-    /* Интерфейс */
-    .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); padding: 20px; display: none; flex-direction: column; }
-    .logo { font-size: 20px; font-weight: 800; color: var(--accent); margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
-    .menu-item { padding: 12px 16px; border-radius: 8px; cursor: pointer; color: #6b7280; font-weight: 600; margin-bottom: 5px; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
-    .menu-item:hover, .menu-item.active { background: #eff6ff; color: var(--accent); }
-
-    .main { flex: 1; padding: 30px; overflow-y: auto; display: none; }
-    h2 { margin-top: 0; color: var(--text); }
-
-    /* Статистика */
-    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px; }
-    .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 4px solid var(--accent); }
-    .stat-label { color: #6b7280; font-size: 13px; margin-bottom: 5px; }
-    .stat-val { font-size: 28px; font-weight: 700; color: var(--text); }
-
-    /* Формы и Таблицы */
-    .form-group { margin-bottom: 15px; }
-    .form-input, textarea, select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; box-sizing: border-box; }
-    .btn-save { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-
-    table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 10px; }
-    th { background: #f9fafb; text-align: left; padding: 15px; font-size: 12px; color: #6b7280; text-transform: uppercase; }
-    td { padding: 15px; border-top: 1px solid var(--border); font-size: 14px; vertical-align: middle; }
-    .prod-img-mini { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; background: #eee; }
-
-    .hidden { display: none !important; }
+  :root{--bg:#f3f4f6;--sidebar:#fff;--accent:#2563eb;--text:#1f2937;--border:#e5e7eb;--muted:#6b7280;--green:#16a34a;--red:#dc2626;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Inter',sans-serif;background:var(--bg);display:flex;min-height:100vh;}
+  #login-screen{position:fixed;inset:0;background:#111827;z-index:1000;display:flex;align-items:center;justify-content:center;}
+  .login-box{background:#1f2937;padding:40px;border-radius:14px;text-align:center;width:340px;}
+  .login-box h2{color:#fff;margin-bottom:20px;}
+  .login-input{width:100%;padding:13px;margin-bottom:14px;border-radius:8px;border:none;background:#374151;color:#fff;font-size:16px;outline:none;}
+  .login-btn{background:var(--accent);color:#fff;border:none;padding:13px;border-radius:8px;cursor:pointer;font-weight:600;width:100%;font-size:16px;}
+  .sidebar{width:250px;background:var(--sidebar);border-right:1px solid var(--border);padding:22px;display:none;flex-direction:column;position:fixed;height:100vh;}
+  .logo{font-size:20px;font-weight:800;color:var(--accent);margin-bottom:36px;}
+  .menu-item{padding:13px 16px;border-radius:10px;cursor:pointer;color:var(--muted);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+  .menu-item:hover,.menu-item.active{background:#eff6ff;color:var(--accent);}
+  .main{flex:1;padding:32px;margin-left:250px;display:none;width:calc(100% - 250px);}
+  h2{color:var(--text);margin-bottom:20px;}
+  .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-bottom:30px;}
+  .stat-card{background:#fff;padding:22px;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);border-left:4px solid var(--accent);}
+  .stat-label{color:var(--muted);font-size:13px;margin-bottom:6px;}
+  .stat-val{font-size:28px;font-weight:800;color:var(--text);}
+  .card{background:#fff;padding:22px;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+  .form-group{margin-bottom:15px;}
+  label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;}
+  .form-input,textarea,select{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:15px;}
+  .btn-save{background:var(--accent);color:#fff;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;font-weight:600;font-size:15px;}
+  .btn-cancel{background:#9ca3af;color:#fff;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;font-weight:600;margin-left:8px;}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+  th{background:#f9fafb;text-align:left;padding:14px;font-size:12px;color:var(--muted);text-transform:uppercase;}
+  td{padding:14px;border-top:1px solid var(--border);font-size:14px;vertical-align:middle;}
+  .prod-img-mini{width:44px;height:44px;object-fit:cover;border-radius:6px;background:#eee;display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .btn-mini{border:none;padding:7px 13px;border-radius:6px;cursor:pointer;font-weight:600;font-size:13px;margin-right:6px;color:#fff;}
+  .btn-edit{background:var(--accent);}
+  .btn-del{background:var(--red);}
+  .top-list{list-style:none;}
+  .top-list li{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border);}
+  .top-list li:last-child{border:none;}
+  .top-rank{font-weight:800;color:var(--accent);margin-right:10px;}
+  .status-select{font-weight:700;padding:7px;border-radius:6px;border:1px solid var(--border);}
+  .loading{text-align:center;padding:50px;color:var(--muted);}
+  .hidden{display:none!important;}
+  .empty-msg{color:var(--muted);padding:20px;text-align:center;}
 </style>
 </head>
 <body>
 
-<!-- ВХОД -->
 <div id="login-screen">
-    <div class="login-box">
-        <h2>🔒 StroyHous Admin</h2>
-        <input type="password" id="pass-inp" class="login-input" placeholder="Введите пароль доступа">
-        <button class="login-btn" onclick="checkPass()">Войти в систему</button>
-        <p id="err-msg" style="color:#ef4444; font-size:12px; margin-top:10px; display:none;">Неверный пароль!</p>
-    </div>
+  <div class="login-box">
+    <h2>🔒 StroyHous Admin</h2>
+    <input type="password" id="pass-inp" class="login-input" placeholder="Пароль" onkeydown="if(event.key==='Enter')checkPass()">
+    <button class="login-btn" onclick="checkPass()">Войти</button>
+    <p id="err-msg" style="color:#ef4444;font-size:13px;margin-top:12px;display:none;">Неверный пароль</p>
+  </div>
 </div>
 
-<!-- АДМИНКА -->
 <div class="sidebar" id="sidebar">
-    <div class="logo">🏗️ StroyHous</div>
-    <div class="menu-item active" onclick="showTab('dashboard')">📊 Главная</div>
-    <div class="menu-item" onclick="showTab('add-prod')">➕ Добавить/Изменить</div>
-    <div class="menu-item" onclick="showTab('all-prod')">📦 Все товары</div>
-    <div class="menu-item" onclick="showTab('orders')">🛒 Заказы</div>
+  <div class="logo">🏗️ StroyHous</div>
+  <div class="menu-item active" data-tab="dashboard" onclick="showTab('dashboard')">📊 Главная</div>
+  <div class="menu-item" data-tab="all-prod" onclick="showTab('all-prod')">📦 Товары</div>
+  <div class="menu-item" data-tab="add-prod" onclick="showTab('add-prod')">➕ Добавить товар</div>
+  <div class="menu-item" data-tab="orders" onclick="showTab('orders')">🛒 Заказы</div>
 </div>
 
 <div class="main" id="main-content">
-    <!-- 1. ГЛАВНАЯ -->
-    <div id="tab-dashboard">
-        <h2>Финансы магазина</h2>
-        <div class="stats-grid">
-            <div class="stat-card"><div class="stat-label">Выручка сегодня</div><div class="stat-val" id="s-today">0 ₽</div></div>
-            <div class="stat-card"><div class="stat-label">Выручка за этот месяц</div><div class="stat-val" id="s-month">0 ₽</div></div>
-        </div>
+  <!-- ГЛАВНАЯ -->
+  <div id="tab-dashboard">
+    <h2>Статистика</h2>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Выручка сегодня</div><div class="stat-val" id="s-today">0 ₽</div></div>
+      <div class="stat-card"><div class="stat-label">Выручка за месяц</div><div class="stat-val" id="s-month">0 ₽</div></div>
     </div>
+    <div class="card">
+      <h2 style="font-size:18px;">🏆 Топ товаров по выручке</h2>
+      <ul class="top-list" id="top-list"><li class="empty-msg">Загрузка…</li></ul>
+    </div>
+  </div>
 
-    <!-- 2. ДОБАВИТЬ/ИЗМЕНИТЬ ТОВАР -->
-    <div id="tab-add-prod" class="hidden">
-        <h2 id="form-title">Новый товар</h2>
-        <div style="background:white; padding:20px; border-radius:12px; max-width:600px;">
-            <div class="form-group"><label>Название</label><input id="p-name" class="form-input"></div>
-            <div class="form-group"><label>Категория</label>
-                <select id="p-cat" class="form-input">
-                    <option>Инструменты</option><option>Материалы</option><option>Сантехника</option><option>Отделка</option>
-                </select>
-            </div>
-            <div class="form-group"><label>Описание</label><textarea id="p-desc" rows="3" class="form-input"></textarea></div>
-            <div class="form-group"><label>Ссылка на фото</label><input id="p-img" class="form-input" placeholder="https://..."></div>
-            <div style="display:flex; gap:15px;">
-                <div class="form-group" style="flex:1"><label>Цена (₽)</label><input id="p-price" type="number" class="form-input"></div>
-                <div class="form-group" style="flex:1"><label>Вес (кг)</label><input id="p-weight" type="number" class="form-input"></div>
-            </div>
-            <button class="btn-save" id="save-btn" onclick="saveProduct()">Сохранить товар</button>
-            <button class="btn-save" id="cancel-edit" style="background:#9ca3af;display:none;" onclick="resetForm()">Отмена</button>
-        </div>
-    </div>
+  <!-- ТОВАРЫ -->
+  <div id="tab-all-prod" class="hidden">
+    <h2>Товары</h2>
+    <table><thead><tr><th>Фото</th><th>Название</th><th>Цена</th><th>Вес</th><th>Наличие</th><th>Действия</th></tr></thead>
+    <tbody id="prod-tbody"></tbody></table>
+  </div>
 
-    <!-- 3. ВСЕ ТОВАРЫ -->
-    <div id="tab-all-prod" class="hidden">
-        <h2>Управление товарами</h2>
-        <table id="prod-table">
-            <thead><tr><th>Фото</th><th>Название</th><th>Цена</th><th>Вес</th><th>Действия</th></tr></thead>
-            <tbody></tbody>
-        </table>
+  <!-- ДОБАВИТЬ -->
+  <div id="tab-add-prod" class="hidden">
+    <h2 id="form-title">Новый товар</h2>
+    <div class="card" style="max-width:620px;">
+      <div class="form-group"><label>Название</label><input id="p-name" class="form-input"></div>
+      <div class="form-group"><label>Категория</label>
+        <select id="p-cat" class="form-input">
+          <option>Инструменты</option><option>Материалы</option><option>Сантехника</option><option>Отделка</option><option>Электрика</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Описание</label><textarea id="p-desc" rows="3" class="form-input"></textarea></div>
+      <div class="form-group"><label>Ссылка на фото</label><input id="p-img" class="form-input" placeholder="https://..."></div>
+      <div style="display:flex;gap:14px;">
+        <div class="form-group" style="flex:1"><label>Цена (₽)</label><input id="p-price" type="number" class="form-input"></div>
+        <div class="form-group" style="flex:1"><label>Вес (кг)</label><input id="p-weight" type="number" step="0.1" class="form-input"></div>
+        <div class="form-group" style="flex:1"><label>Количество (шт)</label><input id="p-stock" type="number" class="form-input"></div>
+      </div>
+      <button class="btn-save" id="save-btn" onclick="saveProduct()">Сохранить</button>
+      <button class="btn-cancel hidden" id="cancel-btn" onclick="resetForm()">Отмена</button>
     </div>
+  </div>
 
-    <!-- 4. ЗАКАЗЫ -->
-    <div id="tab-orders" class="hidden">
-        <h2>Обработка заказов</h2>
-        <table id="ord-table">
-            <thead><tr><th>ID</th><th>Клиент</th><th>Товары</th><th>Адрес</th><th>Статус</th></tr></thead>
-            <tbody></tbody>
-        </table>
-    </div>
+  <!-- ЗАКАЗЫ -->
+  <div id="tab-orders" class="hidden">
+    <h2>Заказы</h2>
+    <table><thead><tr><th>Клиент</th><th>Товары</th><th>Получение</th><th>Сумма</th><th>Статус</th></tr></thead>
+    <tbody id="ord-tbody"></tbody></table>
+  </div>
 </div>
 
 <script>
-    const SECRET = "6tonnadlagazel";
-    let allProducts = [];
+  const SECRET="6tonnadlagazel";
+  let allProducts=[], editingId=null;
+  const STATUS_PICKUP=['Принят','Собирается','Собран','Готов'];
+  const STATUS_DELIVERY=['Принят','Сборка','Едет по адресу','Доставлен'];
 
-    function checkPass() {
-        if(document.getElementById('pass-inp').value === SECRET) {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('sidebar').style.display = 'flex';
-            document.getElementById('main-content').style.display = 'block';
-            loadAllData();
-        } else {
-            document.getElementById('err-msg').style.display = 'block';
-        }
-    }
+  function checkPass(){
+    if(document.getElementById('pass-inp').value===SECRET){
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('sidebar').style.display='flex';
+      document.getElementById('main-content').style.display='block';
+      loadAll();
+    } else document.getElementById('err-msg').style.display='block';
+  }
 
-    function showTab(name) {
-        ['dashboard','add-prod','all-prod','orders'].forEach(t => document.getElementById('tab-'+t).classList.add('hidden'));
-        document.getElementById('tab-'+name).classList.remove('hidden');
-        document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-        event.target.classList.add('active');
-    }
+  function showTab(name){
+    ['dashboard','all-prod','add-prod','orders'].forEach(t=>document.getElementById('tab-'+t).classList.add('hidden'));
+    document.getElementById('tab-'+name).classList.remove('hidden');
+    document.querySelectorAll('.menu-item').forEach(m=>m.classList.toggle('active',m.dataset.tab===name));
+  }
 
-    function loadAllData() {
-        Promise.all([fetch('/api/orders').then(r=>r.json()), fetch('/api/products').then(r=>r.json())])
-        .then(([orders, products]) => {
-            allProducts = products;
-            calcStats(orders);
-            renderProducts();
-            renderOrders(orders);
-        });
-    }
+  function fmt(n){return (Math.round(n)||0).toLocaleString('ru-RU');}
 
-    // --- СТАТИСТИКА ---
-    function calcStats(orders) {
-        const now = new Date();
-        const todayStr = now.toISOString().split('T')[0];
-        const monthStr = now.toISOString().slice(0, 7);
+  function loadAll(){
+    Promise.all([
+      db.collection('products').get(),
+      db.collection('orders').get()
+    ]).then(([ps,os])=>{
+      allProducts=ps.docs.map(d=>({id:d.id,...d.data()}));
+      const orders=os.docs.map(d=>({id:d.id,...d.data()}));
+      renderProducts();
+      renderOrders(orders);
+      calcStats(orders);
+    }).catch(e=>{console.error(e);alert('Ошибка загрузки. Проверьте интернет.');});
+  }
 
-        let t = 0, m = 0;
-        orders.forEach(o => {
-            const sum = o.total || 0;
-            if(o.date && o.date.startsWith(todayStr)) t += sum;
-            if(o.date && o.date.startsWith(monthStr)) m += sum;
-        });
+  // СТАТИСТИКА
+  function calcStats(orders){
+    const now=new Date();
+    const todayStr=now.toISOString().split('T')[0];
+    const monthStr=now.toISOString().slice(0,7);
+    let t=0,m=0,byProduct={};
+    orders.forEach(o=>{
+      const sum=o.total||0;
+      let ds='';
+      if(o.createdAt&&o.createdAt.seconds) ds=new Date(o.createdAt.seconds*1000).toISOString();
+      if(ds.startsWith(todayStr))t+=sum;
+      if(ds.startsWith(monthStr))m+=sum;
+      (o.items||[]).forEach(it=>{
+        const rev=(it.price||0)*(it.qty||0);
+        byProduct[it.name]=(byProduct[it.name]||0)+rev;
+      });
+    });
+    document.getElementById('s-today').innerText=fmt(t)+' ₽';
+    document.getElementById('s-month').innerText=fmt(m)+' ₽';
+    const top=Object.entries(byProduct).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    const el=document.getElementById('top-list');
+    el.innerHTML=top.length?top.map(([name,rev],i)=>
+      `<li><span><span class="top-rank">${i+1}</span>${name}</span><b>${fmt(rev)} ₽</b></li>`
+    ).join(''):'<li class="empty-msg">Пока нет продаж</li>';
+  }
 
-        document.getElementById('s-today').innerText = t.toLocaleString() + ' ₽';
-        document.getElementById('s-month').innerText = m.toLocaleString() + ' ₽';
-    }
+  // ТОВАРЫ
+  function renderProducts(){
+    const tb=document.getElementById('prod-tbody');
+    if(!allProducts.length){tb.innerHTML='<tr><td colspan="6" class="empty-msg">Нет товаров</td></tr>';return;}
+    tb.innerHTML=allProducts.map(p=>`<tr>
+      <td><div class="prod-img-mini">${p.img?`<img src="${p.img}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">`:'📦'}</div></td>
+      <td><b>${p.name||''}</b><br><small style="color:var(--muted)">${p.category||''}</small></td>
+      <td>${fmt(p.price)} ₽</td>
+      <td>${p.weight||0} кг</td>
+      <td>${p.inStock!=null?p.inStock:'—'} шт</td>
+      <td>
+        <button class="btn-mini btn-edit" onclick="editProduct('${p.id}')">✏️</button>
+        <button class="btn-mini btn-del" onclick="deleteProduct('${p.id}')">🗑️</button>
+      </td>
+    </tr>`).join('');
+  }
 
-    // --- ТОВАРЫ ---
-    function saveProduct() {
-        const newProd = {
-            id: Date.now().toString(),
-            name: document.getElementById('p-name').value,
-            category: document.getElementById('p-cat').value,
-            description: document.getElementById('p-desc').value,
-            img: document.getElementById('p-img').value,
-            price: parseInt(document.getElementById('p-price').value),
-            weight: parseFloat(document.getElementById('p-weight').value)
-        };
+  function saveProduct(){
+    const prod={
+      name:document.getElementById('p-name').value.trim(),
+      category:document.getElementById('p-cat').value,
+      description:document.getElementById('p-desc').value.trim(),
+      img:document.getElementById('p-img').value.trim(),
+      price:parseInt(document.getElementById('p-price').value)||0,
+      weight:parseFloat(document.getElementById('p-weight').value)||0,
+      inStock:parseInt(document.getElementById('p-stock').value)||0
+    };
+    if(!prod.name){alert('Введите название');return;}
+    const btn=document.getElementById('save-btn');btn.disabled=true;btn.innerText='Сохраняем…';
+    const op=editingId
+      ? db.collection('products').doc(editingId).update(prod)
+      : db.collection('products').add(prod);
+    op.then(()=>{alert('Сохранено!');resetForm();loadAll();showTab('all-prod');})
+      .catch(e=>{console.error(e);alert('Ошибка сохранения');})
+      .finally(()=>{btn.disabled=false;btn.innerText='Сохранить';});
+  }
 
-        fetch('/api/products/add', {
-            method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(newProd)
-        }).then(() => { alert('Товар добавлен!'); resetForm(); loadAllData(); showTab('all-prod'); });
-    }
+  function editProduct(id){
+    const p=allProducts.find(x=>x.id===id);if(!p)return;
+    editingId=id;
+    document.getElementById('p-name').value=p.name||'';
+    document.getElementById('p-cat').value=p.category||'Инструменты';
+    document.getElementById('p-desc').value=p.description||'';
+    document.getElementById('p-img').value=p.img||'';
+    document.getElementById('p-price').value=p.price||'';
+    document.getElementById('p-weight').value=p.weight||'';
+    document.getElementById('p-stock').value=p.inStock!=null?p.inStock:'';
+    document.getElementById('form-title').innerText='Редактирование товара';
+    document.getElementById('cancel-btn').classList.remove('hidden');
+    showTab('add-prod');
+  }
 
-    function editProduct(id) {
-        const p = allProducts.find(x => x.id === id);
-        if (!p) return;
+  function deleteProduct(id){
+    const p=allProducts.find(x=>x.id===id);
+    if(!confirm('Удалить товар «'+(p?p.name:'')+'»?'))return;
+    db.collection('products').doc(id).delete()
+      .then(()=>{loadAll();})
+      .catch(e=>{console.error(e);alert('Ошибка удаления');});
+  }
 
-        document.getElementById('p-name').value = p.name;
-        document.getElementById('p-cat').value = p.category;
-        document.getElementById('p-desc').value = p.description || '';
-        document.getElementById('p-img').value = p.img || '';
-        document.getElementById('p-price').value = p.price;
-        document.getElementById('p-weight').value = p.weight;
+  function resetForm(){
+    editingId=null;
+    ['p-name','p-desc','p-img','p-price','p-weight','p-stock'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('p-cat').value='Инструменты';
+    document.getElementById('form-title').innerText='Новый товар';
+    document.getElementById('cancel-btn').classList.add('hidden');
+  }
 
-        const btn = document.getElementById('save-btn');
-        const cancelBtn = document.getElementById('cancel-edit');
-        document.getElementById('form-title').innerText = 'Редактирование товара';
+  // ЗАКАЗЫ
+  function renderOrders(orders){
+    orders.sort((a,b)=>{const ta=a.createdAt&&a.createdAt.seconds?a.createdAt.seconds:0;const tb=b.createdAt&&b.createdAt.seconds?b.createdAt.seconds:0;return tb-ta;});
+    const tb=document.getElementById('ord-tbody');
+    if(!orders.length){tb.innerHTML='<tr><td colspan="5" class="empty-msg">Заказов пока нет</td></tr>';return;}
+    tb.innerHTML=orders.map(o=>{
+      const isDelivery=o.delivery&&o.delivery.indexOf('урьер')>=0;
+      const statuses=isDelivery?STATUS_DELIVERY:STATUS_PICKUP;
+      const cur=o.status||statuses[0];
+      const opts=statuses.map(s=>`<option ${s===cur?'selected':''}>${s}</option>`).join('');
+      const items=(o.items||[]).map(i=>`${i.name} ×${i.qty}`).join(', ');
+      const addr=isDelivery?(o.address||'—'):'Самовывоз';
+      return `<tr>
+        <td><b>${o.name||'—'}</b><br><a href="tel:${o.phone}" style="color:var(--accent);font-size:13px;">${o.phone||''}</a></td>
+        <td style="max-width:220px;font-size:13px;">${items}</td>
+        <td style="font-size:13px;">${isDelivery?'🚚 ':'🏪 '}${addr}</td>
+        <td><b>${fmt(o.total)} ₽</b></td>
+        <td><select class="status-select" onchange="updateStatus('${o.id}',this.value,${isDelivery})">${opts}</select></td>
+      </tr>`;
+    }).join('');
+  }
 
-        btn.innerText = '💾 Обновить товар';
-        btn.onclick = () => updateProduct(id);
-        cancelBtn.style.display = 'inline-block';
-
-        showTab('add-prod');
-    }
-
-    function updateProduct(id) {
-        const updatedProd = {
-            id: id,
-            name: document.getElementById('p-name').value,
-            category: document.getElementById('p-cat').value,
-            description: document.getElementById('p-desc').value,
-            img: document.getElementById('p-img').value,
-            price: parseInt(document.getElementById('p-price').value),
-            weight: parseFloat(document.getElementById('p-weight').value)
-        };
-
-        fetch('/api/products/update', {
-            method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(updatedProd)
-        }).then(() => {
-            alert('Товар обновлен!');
-            resetForm();
-            loadAllData();
-            showTab('all-prod');
-        });
-    }
-
-    function resetForm() {
-        document.getElementById('p-name').value = '';
-        document.getElementById('p-desc').value = '';
-        document.getElementById('p-img').value = '';
-        document.getElementById('p-price').value = '';
-        document.getElementById('p-weight').value = '';
-
-        const btn = document.getElementById('save-btn');
-        btn.innerText = 'Сохранить товар';
-        btn.onclick = saveProduct;
-        document.getElementById('cancel-edit').style.display = 'none';
-        document.getElementById('form-title').innerText = 'Новый товар';
-    }
-
-    function renderProducts() {
-        document.querySelector('#prod-table tbody').innerHTML = allProducts.map(p =>
-            `<tr>
-                <td>${p.img ? `<img src="${p.img}" class="prod-img-mini">` : '📦'}</td>
-                <td><b>${p.name}</b><br><small>${p.category}</small></td>
-                <td>${p.price} ₽</td>
-                <td>${p.weight} кг</td>
-                <td>
-                    <button style="background:#2563eb;color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;margin-right:5px;" onclick="editProduct('${p.id}')">✏️ Изменить</button>
-                </td>
-            </tr>`
-        ).join('');
-    }
-
-    // --- ЗАКАЗЫ ---
-    function renderOrders(list) {
-        document.querySelector('#ord-table tbody').innerHTML = list.reverse().map(o => {
-            const isDelivery = o.address && o.address !== 'Самовывоз';
-            const statuses = isDelivery
-                ? ['Новый', 'Собирается', 'Собран', 'Едет к клиенту', 'Доставлен']
-                : ['Новый', 'Собирается', 'Собран', 'Готов к выдаче'];
-
-            const opts = statuses.map(s => `<option value="${s}" ${o.status===s?'selected':''}>${s}</option>`).join('');
-            const items = o.items.map(i => `${i.name} x${i.qty}`).join(', ');
-
-            return `<tr>
-                <td>#${o.id}</td>
-                <td>${o.name}<br><small>${o.phone}</small></td>
-                <td style="max-width:200px;font-size:12px;">${items}</td>
-                <td>${o.address || 'Самовывоз'}</td>
-                <td><select onchange="updateStatus(${o.id}, this.value)" style="font-weight:bold;color:${o.status==='Новый'?'blue':'green'}">${opts}</select></td>
-            </tr>`;
-        }).join('');
-    }
-
-    function updateStatus(id, status) {
-        fetch('/api/orders/status', {
-            method: 'POST', headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({id, status})
-        }).then(() => loadAllData());
-    }
+  function updateStatus(id,status,isDelivery){
+    const statuses=isDelivery?STATUS_DELIVERY:STATUS_PICKUP;
+    db.collection('orders').doc(id).update({status:status,statusOrder:statuses.indexOf(status)})
+      .catch(e=>{console.error(e);alert('Ошибка смены статуса');});
+  }
 </script>
 </body>
 </html>
